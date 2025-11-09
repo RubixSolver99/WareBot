@@ -24,17 +24,21 @@ def update_all():
 
     # Read & Log Kinematics
     pd = kin.getPdCurrent()
-    log.tmpFile(pd[0], "Wheel_Left_Ang_Vel")
-    log.tmpFile(pd[1], "Wheel_Right_Ang_Vel")
+    wheel_left_ang_vel = pd[0]
+    wheel_right_ang_vel = pd[1]
+    log.tmpFile(wheel_left_ang_vel, "Wheel_Left_Ang_Vel")
+    log.tmpFile(wheel_right_ang_vel, "Wheel_Right_Ang_Vel")
 
     # Read & Log Inverse Kinematics
     motion = kin.getMotion()
-    log.tmpFile(motion[0], "Chassis_Lin_Vel")
-    log.tmpFile(motion[1], "Chassis_Ang_Vel")
+    lin_vel = motion[0]
+    ang_vel = motion[1]
+    log.tmpFile(lin_vel, "Chassis_Lin_Vel")
+    log.tmpFile(ang_vel, "Chassis_Ang_Vel")
 
 def get_all():
     global voltage, heading, wheel_left_ang_vel, wheel_right_ang_vel, lin_vel, ang_vel
-    
+
     return {
         "INA219_Voltage": voltage,
         "Compass_Heading": heading,
