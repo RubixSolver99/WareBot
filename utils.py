@@ -11,5 +11,5 @@ def update_screen(telemetry_data):
     \/  \/ \__,_|_|  \___\____/ \___/ \__|                                       
         """)
     print("\n\n")
-    print(f"INA219 Voltage: {telemetry_data['INA219_Voltage']} V")
+    print(f"INA219 Voltage: {telemetry_data['INA219_Voltage']} V\n")
     print(f"Compass Heading: {telemetry_data['Compass_Heading']}°")
