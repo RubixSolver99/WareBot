@@ -36,6 +36,10 @@ def get_all():
     global voltage, heading
     return {
         "INA219_Voltage": voltage,
-        "Compass_Heading": heading
+        "Compass_Heading": heading,
+        "Wheel_Left_Ang_Vel": wheel_left_ang_vel,
+        "Wheel_Right_Ang_Vel": wheel_right_ang_vel,
+        "Chassis_Lin_Vel": lin_vel,
+        "Chassis_Ang_Vel": ang_vel
     }
 
