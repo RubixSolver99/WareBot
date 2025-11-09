@@ -4,7 +4,12 @@ from basics import L2_compass_heading as compass
 from basics import L2_kinematics as kin
 import numpy as np
 
-voltage, heading, wheel_left_ang_vel, wheel_right_ang_vel, lin_vel, ang_vel = 0
+voltage = 0
+heading = 0
+wheel_left_ang_vel = 0
+wheel_right_ang_vel = 0
+lin_vel = 0
+ang_vel = 0
 
 def update_all():
     global voltage, heading, wheel_left_ang_vel, wheel_right_ang_vel, lin_vel, ang_vel
