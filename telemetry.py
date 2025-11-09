@@ -11,7 +11,7 @@ def update_all():
     log.tmpFile(voltage, "INA219_Voltage")
 
     # Read Compass Heading
-    heading = round(compass.get_heading(), 0)
+    heading = int(compass.get_heading())
     log.tmpFile(heading, "Compass_Heading")
 
 def get_all():
@@ -20,4 +20,4 @@ def get_all():
         "INA219_Voltage": voltage,
         "Compass_Heading": heading
     }
-    
+
