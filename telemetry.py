@@ -33,7 +33,8 @@ def update_all():
     log.tmpFile(motion[1], "Chassis_Ang_Vel")
 
 def get_all():
-    global voltage, heading
+    global voltage, heading, wheel_left_ang_vel, wheel_right_ang_vel, lin_vel, ang_vel
+    
     return {
         "INA219_Voltage": voltage,
         "Compass_Heading": heading,
