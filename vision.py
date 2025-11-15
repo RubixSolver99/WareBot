@@ -8,6 +8,7 @@ MIN_INTERVAL = 0.1  # 10 FPS max (adjust as desired)
 _last_save = 0
 cap = None
 
+
 def send_frame(frame):
     """Save frame to disk for Node-RED to read"""
     global _last_save
@@ -26,6 +27,9 @@ def start_camera():
     os.makedirs(os.path.dirname(IMAGE_PATH), exist_ok=True)
 
     cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 360)
+    cap.set(cv2.CAP_PROP_FPS, 30)  # Requesting 30 FPS from the camera
 
     if not cap.isOpened():
         print("Camera failed to open.")
@@ -33,7 +37,7 @@ def start_camera():
 
 def update_camera():
     global cap
-
+    
     ret, frame = cap.read()
     if not ret:
         return None
