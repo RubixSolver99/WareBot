@@ -4,7 +4,7 @@ import time
 
 # Folder where Node-RED will read images
 IMAGE_PATH = "/tmp/vision/frame.jpg"
-MIN_INTERVAL = 0.1  # 10 FPS max (adjust as desired)
+MIN_INTERVAL = 0.03  # 30 FPS max (adjust as desired)
 _last_save = 0
 cap = None
 
