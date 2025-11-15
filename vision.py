@@ -46,5 +46,3 @@ def update_camera():
 
     # Send frame to Node-RED
     send_frame(frame)
-
-    # No imshow → avoids GTK crash
