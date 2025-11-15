@@ -27,8 +27,8 @@ def start_camera():
     os.makedirs(os.path.dirname(IMAGE_PATH), exist_ok=True)
 
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 360)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     cap.set(cv2.CAP_PROP_FPS, 30)  # Requesting 30 FPS from the camera
 
     if not cap.isOpened():
