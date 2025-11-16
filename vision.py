@@ -5,7 +5,7 @@ WIDTH  = 240  # width of image to process (pixels)
 HEIGHT = 160 # height of image to process (pixels)
 IMAGE_PATH = "/tmp/vision/frame.jpg" # Folder where Node-RED will read images
 MIN_INTERVAL = 0.03  # 30 FPS max (adjust as desired)
-COLOR_RANGE = np.array([[30, 80, 5], [65, 255, 185]]) # declare HSV range before overwrighting with user inputs
+COLOR_RANGE = np.array([[35, 80, 5], [65, 255, 240]]) # declare HSV range before overwrighting with user inputs
 
 # _last_save = 0
 # cap = None
@@ -53,6 +53,8 @@ COLOR_RANGE = np.array([[30, 80, 5], [65, 255, 185]]) # declare HSV range before
 
 
 class PalletFilter:
+
+    # exposure_absolute=10
 
     def colorTracking(self, image, range=COLOR_RANGE, min_size=6, max_size=6):
         global WIDTH, HEIGHT
