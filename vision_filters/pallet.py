@@ -66,7 +66,7 @@ class PalletFilter:
         cv2.putText(mask,'Mask',(10,int(image_height/10)), cv2.FONT_HERSHEY_SIMPLEX, 0.3,(255,255,255),1,cv2.LINE_AA)
 
         all = np.vstack((image, thresh, mask))
-        return 
+        return all
     
 def init_filter():  # The function MJPG-Streamer calls.
     pallet_filter = PalletFilter()
