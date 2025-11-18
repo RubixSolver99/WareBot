@@ -1,12 +1,15 @@
 import time, os
+from multiprocessing import Process
 
 import telemetry, utils, vision
 
-voltage, heading = 0, 0
+def vision_worker():
+    vision.start_pallet_filter()
 
 print("Starting Main Program...")
 
-vision.start_pallet_filter()
+vision_process = Process(target=vision_worker)
+vision_process.start()
 
 while True:
     telemetry.update_all()
