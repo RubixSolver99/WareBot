@@ -4,20 +4,21 @@ import numpy as np
 WIDTH  = 240  # width of image to process (pixels)
 HEIGHT = 160 # height of image to process (pixels)
 
-PALLET_COLOR_RANGE = np.array([[15, 25, 0], [100, 255, 240]]) # declare HSV range before overwrighting with user inputs
+PALLET_COLOR_RANGE = np.array([[200, 0, 0], [255, 255, 255]]) # declare LAB range for pallet color
 
 class PalletFilter:
-
-    # exposure_absolute=10
 
     def colorTracking(self, image, range=PALLET_COLOR_RANGE, min_size=6, max_size=6):
         global WIDTH, HEIGHT
 
         image = cv2.resize(image,(WIDTH, HEIGHT)) # resize the image
 
-        hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # convert image to hsv colorspace RENAME THIS TO IMAGE_HSV
+        lab_image = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to LAB colorspace
 
-        thresh = cv2.inRange(hsv_image, PALLET_COLOR_RANGE[0], PALLET_COLOR_RANGE[1]) # Converts a 240x160x3 matrix to a 240x160x1 matrix
+        L, A, B = cv2.split(lab_image)  # split into 3 channels
+        thresh = cv2.threshold(L, 200, 255, cv2.THRESH_BINARY)  # threshold on L channel only
+
+        # thresh = cv2.inRange(lab_image, PALLET_COLOR_RANGE[0], PALLET_COLOR_RANGE[1]) # Converts a 240x160x3 matrix to a 240x160x1 matrix
         # cv2.inrange discovers the pixels that fall within the specified range and assigns 1's to these pixels and 0's to the others.
 
         # apply a blur function
