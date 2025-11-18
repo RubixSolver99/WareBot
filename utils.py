@@ -1,7 +1,10 @@
 import os
 
-def update_screen(telemetry_data):
+def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def update_screen(telemetry_data):
+    clear_screen()
     print("""
     _    _               ______       _   
     | |  | |              | ___ \     | |  
