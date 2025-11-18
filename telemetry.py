@@ -24,8 +24,8 @@ def update_all():
 
     # Read & Log Kinematics
     pd = kin.getPdCurrent()
-    wheel_left_ang_vel = pd[0]
-    wheel_right_ang_vel = pd[1]
+    wheel_left_ang_vel = np.round(pd[0], decimals=3)
+    wheel_right_ang_vel = np.round(pd[1], decimals=3)
     log.tmpFile(wheel_left_ang_vel, "Wheel_Left_Ang_Vel")
     log.tmpFile(wheel_right_ang_vel, "Wheel_Right_Ang_Vel")
 
