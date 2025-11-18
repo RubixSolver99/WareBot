@@ -4,7 +4,7 @@ import numpy as np
 WIDTH  = 240  # width of image to process (pixels)
 HEIGHT = 160 # height of image to process (pixels)
 
-PALLET_COLOR_RANGE = np.array([[35, 80, 5], [65, 255, 240]]) # declare HSV range before overwrighting with user inputs
+PALLET_COLOR_RANGE = np.array([[15, 25, 0], [100, 255, 240]]) # declare HSV range before overwrighting with user inputs
 
 class PalletFilter:
 
