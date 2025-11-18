@@ -1,7 +1,7 @@
 import cv2, os, time
 import numpy as np
 
-PALLET_EXPOSURE_VALUE = 10  # set manual exposure value (lower number = less exposure)
+PALLET_EXPOSURE_VALUE = 15  # set manual exposure value (lower number = less exposure)
 
 def start_pallet_filter():
     set_manual_exposure(PALLET_EXPOSURE_VALUE)
