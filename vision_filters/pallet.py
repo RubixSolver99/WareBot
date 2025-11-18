@@ -17,7 +17,7 @@ class PalletFilter:
 
         image_lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to hsv colorspace RENAME THIS TO IMAGE_HSV
 
-        blur = cv2.GaussianBlur(image_lab, (5, 5), 0)  # apply a gaussian blur to the image
+        blur = cv2.GaussianBlur(image_lab, (7, 7), 5)  # apply a blur to the image
 
         thresh = cv2.inRange(blur, PALLET_COLOR_RANGE[0], PALLET_COLOR_RANGE[1]) # Converts a 240x160x3 matrix to a 240x160x1 matrix
         # cv2.inrange discovers the pixels that fall within the specified range and assigns 1's to these pixels and 0's to the others.
