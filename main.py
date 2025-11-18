@@ -10,6 +10,7 @@ print("Starting Main Program...")
 
 vision_process = Process(target=vision_worker)
 vision_process.start()
+time.sleep(3)  # Allow vision process to initialize
 
 while True:
     telemetry.update_all()
