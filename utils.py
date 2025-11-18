@@ -6,12 +6,12 @@ def clear_screen():
 def update_screen(telemetry_data):
     clear_screen()
     print("""
-    _    _               ______       _   
+     _    _               ______       _   
     | |  | |              | ___ \     | |  
     | |  | | __ _ _ __ ___| |_/ / ___ | |_ 
     | |/\| |/ _` | '__/ _ \ ___ \/ _ \| __|
     \  /\  / (_| | | |  __/ |_/ / (_) | |_ 
-    \/  \/ \__,_|_|  \___\____/ \___/ \__|                                       
+     \/  \/ \__,_|_|  \___\____/ \___/ \__|                                       
         """)
     print("\n\n")
     print(f"INA219 Voltage: {telemetry_data['INA219_Voltage']} V\n")
