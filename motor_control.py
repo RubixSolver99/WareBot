@@ -44,3 +44,5 @@ def set_forklift_pos(pos):            # takes at least 0.3 ms
     pwm_val = compute_pwm(pos)
     forklift_chB.value = pwm_val[0]
     forklift_chA.value = pwm_val[1]
+
+set_forklift_pos(0)  # Initialize forklift to neutral position
