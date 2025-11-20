@@ -10,7 +10,7 @@ class PalletFilter:
 
     # exposure_absolute=10
 
-    def colorTracking(self, image, range=PALLET_COLOR_RANGE, min_size=6, max_size=6):
+    def color_tracking(self, image, range=PALLET_COLOR_RANGE, min_size=6, max_size=6):
         global WIDTH, HEIGHT
 
         image = cv2.resize(image,(WIDTH, HEIGHT)) # resize the image
@@ -72,4 +72,4 @@ class PalletFilter:
     
 def init_filter():  # The function MJPG-Streamer calls.
     pallet_filter = PalletFilter()
-    return pallet_filter.colorTracking
+    return pallet_filter.color_tracking
