@@ -4,7 +4,8 @@ import numpy as np
 WIDTH  = 240  # width of image to process (pixels)
 HEIGHT = 160 # height of image to process (pixels)
 
-PALLET_COLOR_RANGE = np.array([[10, 80, 120], [255, 140, 160]]) # declare LAB range before overwrighting with user inputs
+PALLET_COLOR_RANGE = np.array([[45, 70, 110], [255, 150, 170]]) # LAB Values For MXET Lab
+# PALLET_COLOR_RANGE = np.array([[10, 80, 120], [255, 140, 160]]) # LAB Values for Carson's House
 
 class PalletFilter:
 
