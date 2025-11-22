@@ -45,11 +45,16 @@ def set_right_motor_vel(vel):         # takes at least 0.3 ms
     right_drive_chB.value = pwm_val[0]
     right_drive_chA.value = pwm_val[1]
 
+def forklift_up():
+    forklift_servo_A.min()
+    forklift_servo_B.max()
+
+def forklift_down():
+    forklift_servo_A.mid()
+    forklift_servo_B.mid()
 
 while True:
-    forklift_servo_A.min()     # → full left
-    time.sleep(1)
-    forklift_servo_A.mid()     # → center
-    time.sleep(1)
-    forklift_servo_A.max()     # → full right
-    time.sleep(1)
+    forklift_up()
+    time.sleep(2)
+    forklift_down()
+    time.sleep(2)
