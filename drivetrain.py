@@ -21,7 +21,7 @@ class DriveTrain:
 
         #UPD communication#
         self.IP = "127.0.0.1"
-        self.port = 3553
+        self.port = 3655
         self.dashBoardDatasock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.dashBoardDatasock.bind((self.IP, self.port))
         self.dashBoardDatasock.settimeout(.25)
@@ -41,6 +41,7 @@ class DriveTrain:
         while True:
             try:
                 dashBoardData,recvAddr = self.dashBoardDatasock.recvfrom(1024)
+                print(dashBoardData)
                 self.dashBoardData = json.loads(dashBoardData)
 
             except socket.timeout:
@@ -50,7 +51,7 @@ class DriveTrain:
         while True:
             if self.dashBoardData != None:
                 try:
-                    userInputTarget = self.dashBoardData['one_joystick']
+                    userInputTarget = self.dashBoardData['one_joystick.vector']
                     wheelSpeedTarget = self._getWheelSpeed(userInputTarget)
                     sc.driveOpenLoop(wheelSpeedTarget)
                 except: 
@@ -78,3 +79,13 @@ class DriveTrain:
 
     def getdashBoardData(self):
         return self.dashBoardData
+
+
+if __name__ == "__main__":
+
+    robot = DriveTrain()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Stopping robot")
