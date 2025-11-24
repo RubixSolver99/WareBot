@@ -14,6 +14,8 @@ import numpy as np                          # for handling arrays
 
 factory = PiGPIOFactory()
 
+servo_up_pos = 0.25
+servo_down_pos = 0.75
 drive_freq = 150                            # motor driving frequency
 
 # Broadcom (BCM) pin numbering for RasPi is as follows:             PHYSICAL:       NAME:
@@ -46,15 +48,15 @@ def set_right_motor_vel(vel):         # takes at least 0.3 ms
     right_drive_chA.value = pwm_val[1]
 
 def forklift_up():
-    forklift_servo_A.min()
-    forklift_servo_B.max()
+    forklift_servo_A.value = servo_up_pos
+    forklift_servo_B.value = -servo_up_pos
 
 def forklift_down():
-    forklift_servo_A.mid()
-    forklift_servo_B.mid()
+    forklift_servo_A.value = servo_down_pos
+    forklift_servo_B.value = -servo_down_pos
 
 while True:
     forklift_up()
     time.sleep(2)
     forklift_down()
-    time.sleep(2)
+    time.sleep(10)
