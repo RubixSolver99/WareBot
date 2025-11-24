@@ -15,6 +15,7 @@ def terminate_handler(signum, frame):
 
     if vision_process is not None:
         vision_process.terminate()
+        time.sleep(2)
         vision_process.join()
 
     print("Done.")
