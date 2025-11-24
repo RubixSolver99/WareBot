@@ -51,7 +51,7 @@ class DriveTrain:
         while True:
             if self.dashBoardData != None:
                 try:
-                    userInputTarget = self.dashBoardData['one_joystick.vector']
+                    userInputTarget = self.dashBoardData['one_joystick']['vector']
                     wheelSpeedTarget = self._getWheelSpeed(userInputTarget)
                     sc.driveOpenLoop(wheelSpeedTarget)
                 except: 
