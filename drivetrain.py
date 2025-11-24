@@ -32,7 +32,7 @@ class MotorControl:
         factory = PiGPIOFactory()
         self.forklift_servo_A = servo(24, pin_factory=factory)                   # PIN 18        GPIO24
         self.forklift_servo_B = servo(25, pin_factory=factory)                   # PIN 22        GPIO25
-        self.forklift_up()
+        self.forklift_down()
 
         #UPD communication#
         self.IP = "127.0.0.1"
