@@ -15,7 +15,7 @@ from gpiozero.pins.pigpio import PiGPIOFactory     # for precise servo control
 import time                                        # for keeping time
 
 SERVO_UP_POS = 0.25
-SERVO_DOWN_POS = 0.70
+SERVO_DOWN_POS = 0.85
 
 class MotorControl:
 
