@@ -29,9 +29,6 @@ signal.signal(signal.SIGINT, terminate_handler)
 drivetrain = DriveTrain()
 time.sleep(1)                                       # Allow drivetrain to initialize
 
-while True:
-    time.sleep(1)
-"""
 vision_process = Process(target=vision_worker)
 vision_process.start()
 time.sleep(3)                                       # Allow vision process to initialize
@@ -41,4 +38,4 @@ while True:
     utils.update_screen(telemetry.get_all())
 
     time.sleep(1)
-"""
+

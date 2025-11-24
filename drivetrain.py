@@ -41,7 +41,6 @@ class DriveTrain:
         while True:
             try:
                 dashBoardData,recvAddr = self.dashBoardDatasock.recvfrom(1024)
-                print(dashBoardData)
                 self.dashBoardData = json.loads(dashBoardData)
 
             except socket.timeout:
