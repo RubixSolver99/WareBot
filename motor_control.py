@@ -14,7 +14,7 @@ import numpy as np                          # for handling arrays
 
 factory = PiGPIOFactory()
 
-servo_up_pos = 0.25
+servo_up_pos = 0.50
 servo_down_pos = 0.75
 drive_freq = 150                            # motor driving frequency
 
@@ -48,12 +48,18 @@ def set_right_motor_vel(vel):         # takes at least 0.3 ms
     right_drive_chA.value = pwm_val[1]
 
 def forklift_up():
-    forklift_servo_A.value = servo_up_pos
-    forklift_servo_B.value = -servo_up_pos
+    for i in range(servo_up_pos*100, int(servo_down_pos*100), 5):
+        pos = i / 100.0
+        forklift_servo_A.value = pos
+        forklift_servo_B.value = -pos
+        time.sleep(0.05)
 
 def forklift_down():
-    forklift_servo_A.value = servo_down_pos
-    forklift_servo_B.value = -servo_down_pos
+    for i in range(int(servo_down_pos*100), int(servo_up_pos*100), -5):
+        pos = i / 100.0
+        forklift_servo_A.value = pos
+        forklift_servo_B.value = -pos
+        time.sleep(0.05)
 
 while True:
     forklift_up()
