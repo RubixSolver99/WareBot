@@ -8,7 +8,7 @@ import basics.L2_speed_control as sc
 import time
 from threading import Thread
 
-class SCUTTLE:
+class DriveTrain:
 
     def __init__(self):
 
@@ -78,13 +78,3 @@ class SCUTTLE:
 
     def getdashBoardData(self):
         return self.dashBoardData
-
-
-if __name__ == "__main__":
-
-    robot = SCUTTLE()
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Stopping robot")

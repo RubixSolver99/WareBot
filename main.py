@@ -1,8 +1,10 @@
 import time, signal, sys
 from multiprocessing import Process
 
+from drivetrain import DriveTrain
 import telemetry, utils, vision
 
+drivetrain = None
 vision_process = None
 
 def vision_worker():
@@ -22,6 +24,9 @@ def terminate_handler(signum, frame):
 print("Starting Main Program...")
 
 signal.signal(signal.SIGINT, terminate_handler)
+
+drivetrain = DriveTrain()
+time.sleep(1)                                       # Allow drivetrain to initialize
 
 vision_process = Process(target=vision_worker)
 vision_process.start()
