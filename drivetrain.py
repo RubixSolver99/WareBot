@@ -66,15 +66,17 @@ class MotorControl:
         while True:
             if self.dashBoardData != None:
                 try:
-                    self.userInput = self.dashBoardData['one_joystick']
-                    userInputTarget = self.userInput['vector']
-                    wheelSpeedTarget = self._getWheelSpeed(userInputTarget)
-                    sc.driveOpenLoop(wheelSpeedTarget)
 
+                    print (self.dashBoardData['buttons'])
                     if self.dashBoardData['buttons']['A']:
                         self.forklift_up()
                     elif self.dashBoardData['buttons']['B']:
                         self.forklift_down()
+
+                    self.userInput = self.dashBoardData['one_joystick']
+                    userInputTarget = self.userInput['vector']
+                    wheelSpeedTarget = self._getWheelSpeed(userInputTarget)
+                    sc.driveOpenLoop(wheelSpeedTarget)
                 except: 
                     pass
 
