@@ -9,11 +9,8 @@ import basics.L2_speed_control as sc
 import time
 from threading import Thread
 
-
-from gpiozero import Servo as servo                # for forklift servo control
-from gpiozero.pins.pigpio import PiGPIOFactory     # for precise servo control
-
-import time                                        # for keeping time
+from gpiozero import Servo as servo                # pyright: ignore[reportMissingImports]
+from gpiozero.pins.pigpio import PiGPIOFactory     # pyright: ignore[reportMissingImports]
 
 SERVO_UP_POS = 0.25
 SERVO_DOWN_POS = 0.85
