@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # Drive the SCUTTLE while receiving commands from NodeRED dashboard
 
+import os
 import socket
 import json
 import numpy as np
@@ -29,6 +30,9 @@ class MotorControl:
         self.max_td = (self.max_xd/self.wheelBase)
 
         #Forklift Servo Setup#
+        os.system('sudo systemctl start pigpiod')               # Start pigpio daemon for precise servo control
+        time.sleep(1)                                           # Allow pigpio daemon to initialize
+
         factory = PiGPIOFactory()
         self.forklift_servo_A = servo(24, pin_factory=factory)                   # PIN 18        GPIO24
         self.forklift_servo_B = servo(25, pin_factory=factory)                   # PIN 22        GPIO25
@@ -119,6 +123,13 @@ class MotorControl:
         self.forklift_servo_A.value = SERVO_UP_POS
         self.forklift_servo_B.value = -SERVO_UP_POS
 
+    def exit(self):
+        self.forklift_down()
+        self.forklift_servo_A.detach()
+        self.forklift_servo_B.detach()
+
+        os.system('sudo systemctl stop pigpiod')        # Stop pigpio daemon to prevent servos from constantly running
+
 
 if __name__ == "__main__":
 
@@ -127,5 +138,5 @@ if __name__ == "__main__":
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        robot.forklift_down()
-        print("Stopping robot")
+        print("Stopping motor control and forklift...")
+        robot.exit()
