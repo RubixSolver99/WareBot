@@ -1,10 +1,10 @@
 import time, signal, sys
 from multiprocessing import Process
 
-from drivetrain import DriveTrain
+from motor_control import MotorControl
 import telemetry, utils, vision
 
-drivetrain = None
+motor_controller = None
 vision_process = None
 
 def vision_worker():
@@ -18,6 +18,9 @@ def terminate_handler(signum, frame):
         time.sleep(2)
         vision_process.join()
 
+    if motor_controller is not None:
+        motor_controller.exit()
+
     print("Done.")
 
     sys.exit(0)
@@ -26,8 +29,8 @@ print("Starting Main Program...")
 
 signal.signal(signal.SIGINT, terminate_handler)
 
-drivetrain = DriveTrain()
-time.sleep(1)                                       # Allow drivetrain to initialize
+motor_controller = MotorControl()
+time.sleep(1)                                       # Allow motor controller to initialize
 
 vision_process = Process(target=vision_worker)
 vision_process.start()

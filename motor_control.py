@@ -1,66 +1,142 @@
-# Motors Program for SCUTTLE running RasPi
-# This example sends commands to two motors on the appropriate pins for H-bridge
-# For pin mapping, see Wiring Guide Pi on the SCUTTLE webpage.
-# Last update: 2020.11 with improved PWM method
+#!/usr/bin/python3
+# Drive the SCUTTLE while receiving commands from NodeRED dashboard
 
-# Import external libraries
-import gpiozero                             # used for PWM outputs
-from gpiozero import PWMOutputDevice as pwm # for driving motors, LEDs, etc
-from gpiozero import Servo as servo         # for forklift control
-from gpiozero.pins.pigpio import PiGPIOFactory
-import time                                 # for keeping time
-import numpy as np                          # for handling arrays
+import os
+import socket
+import json
+import numpy as np
+import basics.L2_speed_control as sc
+import time
+from threading import Thread
 
 
-factory = PiGPIOFactory()
+from gpiozero import Servo as servo                # for forklift servo control
+from gpiozero.pins.pigpio import PiGPIOFactory     # for precise servo control
 
-servo_up_pos = 0.25
-servo_down_pos = 0.85
-drive_freq = 150                            # motor driving frequency
+import time                                        # for keeping time
 
-# Broadcom (BCM) pin numbering for RasPi is as follows:             PHYSICAL:       NAME:
-left_drive_chA  = pwm(17, frequency=drive_freq,initial_value=0)     # PIN 11        GPIO17
-left_drive_chB  = pwm(18, frequency=drive_freq,initial_value=0)     # PIN 12        GPIO18
-right_drive_chA = pwm(22, frequency=drive_freq,initial_value=0)     # PIN 15        GPIO22
-right_drive_chB = pwm(23, frequency=drive_freq,initial_value=0)     # PIN 16        GPIO23
-forklift_servo_A = servo(24, pin_factory=factory)                   # PIN 18        GPIO24
-forklift_servo_B = servo(25, pin_factory=factory)                   # PIN 22        GPIO25
+SERVO_UP_POS = 0.25
+SERVO_DOWN_POS = 0.85
 
-def compute_pwm(speed):              # take an argument in range [-1,1]
-    if speed == 0:
-        x = np.array([0,0])         # set all PWM to zero
-    else:
-        x = speed + 1.0             # change the range to [0,2]
-        chA = 0.5 * x               # channel A sweeps low to high
-        chB = 1 - (0.5 * x)         # channel B sweeps high to low
-        x = np.array([chA, chB])    # store values to an array
-        x = np.round(x,2)           # round the values
-    return(x)
+class MotorControl:
 
-def set_left_motor_vel(vel):          # takes at least 0.3 ms
-    pwm_val = compute_pwm(vel)
-    left_drive_chB.value = pwm_val[0]
-    left_drive_chA.value = pwm_val[1]
+    def __init__(self):
 
-def set_right_motor_vel(vel):         # takes at least 0.3 ms
-    pwm_val = compute_pwm(vel)
-    right_drive_chB.value = pwm_val[0]
-    right_drive_chA.value = pwm_val[1]
+        #Kinematics#
+        self.wheelRadius = 0.04
+        self.wheelBase = 0.1
+        self.A_matrix = np.array([[1/self.wheelRadius, -self.wheelBase/self.wheelRadius], [1/self.wheelRadius, self.wheelBase/self.wheelRadius]])
+        self.max_xd = 0.4
+        self.max_td = (self.max_xd/self.wheelBase)
 
-def forklift_down():
-    for i in range(int(servo_up_pos*100), int(servo_down_pos*100), 5):
-        pos = i / 100.0
-        forklift_servo_A.value = pos
-        forklift_servo_B.value = -pos
-        time.sleep(0.05)
+        #Forklift Servo Setup#
+        os.system('sudo systemctl start pigpiod')               # Start pigpio daemon for precise servo control
+        time.sleep(1)                                           # Allow pigpio daemon to initialize
 
-def forklift_up():
-    forklift_servo_A.value = servo_up_pos
-    forklift_servo_B.value = -servo_up_pos
+        factory = PiGPIOFactory()
+        self.forklift_servo_A = servo(24, pin_factory=factory)                   # PIN 18        GPIO24
+        self.forklift_servo_B = servo(25, pin_factory=factory)                   # PIN 22        GPIO25
+        self.forklift_down()
+
+        #UPD communication#
+        self.IP = "127.0.0.1"
+        self.port = 3655
+        self.dashBoardDatasock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.dashBoardDatasock.bind((self.IP, self.port))
+        self.dashBoardDatasock.settimeout(.25)
+
+        #NodeRED data in#
+        self.dashBoardData = None
+
+        #NodeRED Data Thread#
+        self.dashBoardDataThread = Thread(target=self._dashBoardDataLoop, daemon=True)
+        self.dashBoardDataThread.start()
+
+        #Motor Control Thread#
+        self.controlThread = Thread(target=self._controlLoop, daemon=True)
+        self.controlThread.start()
 
 
-while True:
-    forklift_up()
-    time.sleep(10)
-    forklift_down()
-    time.sleep(10)
+    def _dashBoardDataLoop(self):
+        while True:
+            try:
+                dashBoardData,recvAddr = self.dashBoardDatasock.recvfrom(1024)
+                self.dashBoardData = json.loads(dashBoardData)
+
+            except socket.timeout:
+                self.dashBoardData = None
+
+    def _controlLoop(self):
+        while True:
+            if self.dashBoardData != None:
+                try:
+                    userInput = self.dashBoardData['one_joystick']['vector']
+                    wheelSpeedTarget = self._getWheelSpeed(userInput)
+                    sc.driveOpenLoop(wheelSpeedTarget)
+                except: 
+                    pass
+
+                try:
+                    userInput = self.dashBoardData['one_joystick']['buttons']
+
+                    if userInput['A']:
+                        print("Forklift Up")
+                        self.forklift_up()
+                    elif userInput['B']:
+                        print("Forklift Down")
+                        self.forklift_down()
+                except:
+                    pass
+
+    def _getWheelSpeed(self,userInputTarget):
+        try:
+            robotTarget = self._mapSpeeds(np.array([userInputTarget['y'],-1*userInputTarget['x']]))
+            wheelSpeedTarget = self._calculateWheelSpeed(robotTarget)
+            return wheelSpeedTarget
+        except:
+            pass
+    
+    def _mapSpeeds(self,original_B_matrix):
+        B_matrix = np.zeros(2)
+        B_matrix[0] = self.max_xd * original_B_matrix[0]
+        B_matrix[1] = self.max_td * original_B_matrix[1]
+        return B_matrix
+
+    def _calculateWheelSpeed(self,B_matrix):
+        C_matrix = np.matmul(self.A_matrix,B_matrix)
+        C_matrix = np.round(C_matrix,decimals=3)
+        return C_matrix
+
+
+    def getdashBoardData(self):
+        return self.dashBoardData
+    
+
+    def forklift_down(self):
+        for i in range(int(SERVO_UP_POS*100), int(SERVO_DOWN_POS*100), 5):
+            pos = i / 100.0
+            self.forklift_servo_A.value = pos
+            self.forklift_servo_B.value = -pos
+            time.sleep(0.05)
+
+    def forklift_up(self):
+        self.forklift_servo_A.value = SERVO_UP_POS
+        self.forklift_servo_B.value = -SERVO_UP_POS
+
+    def exit(self):
+        self.forklift_down()
+        self.forklift_servo_A.detach()
+        self.forklift_servo_B.detach()
+
+        os.system('sudo systemctl stop pigpiod')        # Stop pigpio daemon to prevent servos from constantly running
+
+
+if __name__ == "__main__":
+
+    robot = MotorControl()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Stopping motor control and forklift...")
+        robot.exit()
