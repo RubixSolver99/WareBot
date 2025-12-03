@@ -1,7 +1,7 @@
 import time, signal, sys
 from multiprocessing import Process
 
-from motor_control import MotorControl
+from motor_control import MotorController
 import telemetry, utils, vision
 
 motor_controller = None
@@ -29,7 +29,7 @@ print("Starting Main Program...")
 
 signal.signal(signal.SIGINT, terminate_handler)
 
-motor_controller = MotorControl()
+motor_controller = MotorController()
 time.sleep(1)                                       # Allow motor controller to initialize
 
 vision_process = Process(target=vision_worker)

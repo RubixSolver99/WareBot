@@ -15,7 +15,7 @@ from gpiozero.pins.pigpio import PiGPIOFactory     # pyright: ignore[reportMissi
 SERVO_UP_POS = 0.25
 SERVO_DOWN_POS = 0.85
 
-class MotorControl:
+class MotorController:
 
     def __init__(self):
 
@@ -130,7 +130,7 @@ class MotorControl:
 
 if __name__ == "__main__":
 
-    robot = MotorControl()
+    robot = MotorController()
     try:
         while True:
             time.sleep(1)
