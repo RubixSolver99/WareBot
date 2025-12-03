@@ -1,4 +1,4 @@
-import cv2, os, time
+import os, time
 import numpy as np
 
 PALLET_EXPOSURE_VALUE = 25  # set manual exposure value (lower number = less exposure)
