@@ -4,8 +4,8 @@ import numpy as np
 WIDTH  = 240  # width of image to process (pixels)
 HEIGHT = 160 # height of image to process (pixels)
 
-PALLET_COLOR_RANGE = np.array([[45, 70, 110], [255, 150, 170]]) # LAB Values For MXET Lab
-# PALLET_COLOR_RANGE = np.array([[10, 80, 120], [255, 140, 160]]) # LAB Values for Carson's House
+# PALLET_COLOR_RANGE = np.array([[45, 70, 110], [255, 150, 170]]) # LAB Values For MXET Lab
+PALLET_COLOR_RANGE = np.array([[20, 70, 120], [255, 150, 160]]) # LAB Values for Carson's House
 
 class PalletFilter:
 
@@ -16,7 +16,7 @@ class PalletFilter:
 
         image = cv2.resize(image,(WIDTH, HEIGHT)) # resize the image
 
-        image_lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to hsv colorspace RENAME THIS TO IMAGE_HSV
+        image_lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to lab colorspace RENAME THIS TO IMAGE_HSV
 
         blur = cv2.GaussianBlur(image_lab, (7, 7), 5)  # apply a blur to the image
 
@@ -44,7 +44,7 @@ class PalletFilter:
 
                 cv2.putText(image,"("+str(center[0])+","+str(center[1])+")", (center[0]+10,center[1]+15), cv2.FONT_HERSHEY_SIMPLEX, 0.2,(0,0,0),2,cv2.LINE_AA)
                 cv2.putText(image,"("+str(center[0])+","+str(center[1])+")", (center[0]+10,center[1]+15), cv2.FONT_HERSHEY_SIMPLEX, 0.2,(255,255,255),1,cv2.LINE_AA)
-        
+
         image_height, image_width, channels = image.shape   # get image dimensions
 
         spacer = np.zeros((image_height,3,3), np.uint8)
