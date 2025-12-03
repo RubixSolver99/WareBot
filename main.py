@@ -30,13 +30,22 @@ print("Starting Main Program...")
 signal.signal(signal.SIGINT, terminate_handler)
 
 motor_controller = MotorController()
-time.sleep(1)                                       # Allow motor controller to initialize
+time.sleep(1)                                             # Allow motor controller to initialize
 
 vision_process = Process(target=vision_worker)
 vision_process.start()
-time.sleep(3)                                       # Allow vision process to initialize
+time.sleep(3)                                             # Allow vision process to initialize
+
+
+pallet_data_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)   # Create UDP socket for receiving pallet bounding box data
+pallet_data_socket.bind(("127.0.0.1", 3657))
 
 while True:
+    data, addr = pallet_data_socket.recvfrom(1024)
+    x, y, w, h, c_x, c_y = map(int, data.decode().split(","))
+    print("Bounding box:", x, y, w, h)
+    print("Center point:", c_x, c_y)
+
     telemetry.update_all()
     utils.update_screen(telemetry.get_all())
 
