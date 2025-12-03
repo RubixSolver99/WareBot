@@ -1,4 +1,4 @@
-import cv2, os
+import cv2, os, socket      # pyright: ignore[reportMissingImports]
 import numpy as np
 
 WIDTH  = 240  # width of image to process (pixels)
@@ -9,7 +9,10 @@ PALLET_COLOR_RANGE = np.array([[20, 70, 120], [255, 150, 160]]) # LAB Values for
 
 class PalletFilter:
 
-    # exposure_absolute=10
+    def __init__(self):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.target = ("127.0.0.1", 3657)
+
 
     def color_tracking(self, image, range=PALLET_COLOR_RANGE, min_size=6, max_size=6):
         global WIDTH, HEIGHT
@@ -36,6 +39,9 @@ class PalletFilter:
             x,y,w,h = cv2.boundingRect(c)               # Get bounding rectangle (x,y,w,h) of the largest contour
 
             center = (int(x+0.5*w), int(y+0.5*h))       # defines center of rectangle around the largest target area
+
+            message = f"{x},{y},{w},{h},{center[0]},{center[1]}"
+            self.sock.sendto(message.encode(), self.target)
 
             if 0.5*w > min_size:
                 cv2.rectangle(image, (int(x), int(y)), (int(x+w), int(y+h)), (0, 255, 255), 2)  # draw bounding box

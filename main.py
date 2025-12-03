@@ -1,4 +1,4 @@
-import time, signal, sys
+import time, signal, socket, sys
 from multiprocessing import Process
 
 from motor_control import MotorController

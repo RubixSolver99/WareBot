@@ -11,7 +11,7 @@ def start_pallet_filter():
               --filter /usr/local/lib/mjpg-streamer/cvfilter_py.so \
               --fargs ./vision_filters/pallet.py\" \
               -o \"/usr/local/lib/mjpg-streamer/output_http.so \
-              -p 8090 \
+              -p 3656 \
               -w /usr/local/share/mjpg-streamer/www\"")
 
 def set_manual_exposure(value):
