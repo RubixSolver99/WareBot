@@ -42,9 +42,16 @@ pallet_data_socket.bind(("127.0.0.1", 3657))
 
 while True:
     data, addr = pallet_data_socket.recvfrom(1024)
-    x, y, w, h, c_x, c_y = map(int, data.decode().split(","))
-    print("Bounding box:", x, y, w, h)
-    print("Center point:", c_x, c_y)
+    msg = data.decode().strip()
+
+    if msg.startswith("FOUND"):
+        # Remove the "FOUND," prefix and split the data fields
+        parts = msg.replace("FOUND,", "").split(",")
+
+        # Parse the values
+        x, y, w, h, c_x, c_y = map(int, parts)
+        print("Bounding box:", x, y, w, h)
+        print("Center point:", c_x, c_y)
 
     telemetry.update_all()
     utils.update_screen(telemetry.get_all())

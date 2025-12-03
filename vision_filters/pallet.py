@@ -41,8 +41,7 @@ class PalletFilter:
             center = (int(x+0.5*w), int(y+0.5*h))       # defines center of rectangle around the largest target area
 
             if 0.5*w > min_size:
-                message = f"{x},{y},{w},{h},{center[0]},{center[1]}"
-                self.sock.sendto(message.encode(), self.target)
+                message = f"FOUND,{x},{y},{w},{h},{center[0]},{center[1]}"
 
                 cv2.rectangle(image, (int(x), int(y)), (int(x+w), int(y+h)), (0, 255, 255), 2)  # draw bounding box
                 cv2.circle(image, center, 3, (0, 0, 0), -1) # draw a dot on the target center
@@ -50,6 +49,10 @@ class PalletFilter:
 
                 cv2.putText(image,"("+str(center[0])+","+str(center[1])+")", (center[0]+10,center[1]+15), cv2.FONT_HERSHEY_SIMPLEX, 0.2,(0,0,0),2,cv2.LINE_AA)
                 cv2.putText(image,"("+str(center[0])+","+str(center[1])+")", (center[0]+10,center[1]+15), cv2.FONT_HERSHEY_SIMPLEX, 0.2,(255,255,255),1,cv2.LINE_AA)
+            else:
+                message = "NOT_FOUND"
+            
+            self.sock.sendto(message.encode(), self.target)
 
         image_height, image_width, channels = image.shape   # get image dimensions
 
