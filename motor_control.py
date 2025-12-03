@@ -127,13 +127,3 @@ class MotorController:
 
         os.system('sudo systemctl stop pigpiod')        # Stop pigpio daemon to prevent servos from constantly running
 
-
-if __name__ == "__main__":
-
-    robot = MotorController()
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Stopping motor control and forklift...")
-        robot.exit()
