@@ -7,7 +7,8 @@ HEIGHT = 160 # height of image to process (pixels)
 ASPECT = 11.5  # width / height of pallet in real life 
 
 # PALLET_COLOR_RANGE = np.array([[45, 70, 110], [255, 150, 170]]) # LAB Values For MXET Lab
-PALLET_COLOR_RANGE = np.array([[20, 70, 120], [255, 150, 160]]) # LAB Values for Carson's House
+# PALLET_COLOR_RANGE = np.array([[20, 70, 120], [255, 150, 160]]) # LAB Values for Carson's House
+PALLET_COLOR_RANGE = np.array([[0, 0, 0], [255, 255, 255]]) # HSV Values for Carson's House
 
 class PalletFilter:
 
@@ -21,9 +22,9 @@ class PalletFilter:
 
         image = cv2.resize(image,(WIDTH, HEIGHT)) # resize the image
 
-        image_lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to lab colorspace RENAME THIS TO IMAGE_HSV
+        image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)  # convert image to HSV colorspace
 
-        blur = cv2.GaussianBlur(image_lab, (7, 7), 5)  # apply a blur to the image
+        blur = cv2.GaussianBlur(image_hsv, (7, 7), 5)  # apply a blur to the image
 
         thresh = cv2.inRange(blur, PALLET_COLOR_RANGE[0], PALLET_COLOR_RANGE[1]) # Converts a 240x160x3 matrix to a 240x160x1 matrix
         # cv2.inrange discovers the pixels that fall within the specified range and assigns 1's to these pixels and 0's to the others.
