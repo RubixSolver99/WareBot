@@ -29,6 +29,11 @@ def terminate_handler(signum, frame):
     if motor_controller is not None:
         motor_controller.exit()
 
+    if telemetry_process is not None:
+        telemetry_process.terminate()
+        time.sleep(2)
+        telemetry_process.join()
+
     print("Done.")
 
     sys.exit(0)
@@ -48,7 +53,6 @@ time.sleep(1)                                             # Allow telemetry proc
 
 motor_controller = MotorController()
 time.sleep(1)                                             # Allow motor controller to initialize
-
 
 pallet_data_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)   # Create UDP socket for receiving pallet bounding box data
 pallet_data_socket.bind(("127.0.0.1", 3657))
