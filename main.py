@@ -31,7 +31,6 @@ def terminate_handler(signum, frame):
 
     if telemetry_process is not None:
         telemetry_process.terminate()
-        time.sleep(2)
         telemetry_process.join()
 
     print("Done.")
