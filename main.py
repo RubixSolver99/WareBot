@@ -2,7 +2,8 @@ import time, signal, socket, sys
 from multiprocessing import Process
 
 from motor_control import MotorController
-import telemetry, utils, vision
+from telemetry import Telemetry
+import utils, vision
 
 motor_controller = None
 vision_process = None
@@ -28,6 +29,8 @@ def terminate_handler(signum, frame):
 print("Starting Main Program...")
 
 signal.signal(signal.SIGINT, terminate_handler)
+
+telemetry = Telemetry()
 
 motor_controller = MotorController()
 time.sleep(1)                                             # Allow motor controller to initialize
