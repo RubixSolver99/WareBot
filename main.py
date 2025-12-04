@@ -37,6 +37,10 @@ print("Starting Main Program...")
 
 signal.signal(signal.SIGINT, terminate_handler)
 
+vision_process = Process(target=vision_worker)
+vision_process.start()
+time.sleep(3)                                             # Allow vision process to initialize
+
 telemetry = Telemetry()
 telemetry_process = Process(target=telemetry_worker)
 telemetry_process.start()
@@ -44,10 +48,6 @@ time.sleep(1)                                             # Allow telemetry proc
 
 motor_controller = MotorController()
 time.sleep(1)                                             # Allow motor controller to initialize
-
-vision_process = Process(target=vision_worker)
-vision_process.start()
-time.sleep(3)                                             # Allow vision process to initialize
 
 
 pallet_data_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)   # Create UDP socket for receiving pallet bounding box data
