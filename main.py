@@ -11,6 +11,13 @@ vision_process = None
 def vision_worker():
     vision.start_pallet_filter()
 
+def telemetry_worker():
+    telemetry = Telemetry()
+    while True:
+        telemetry.update_all()
+        utils.update_screen(telemetry.get_all())
+        time.sleep(1)
+
 def terminate_handler(signum, frame):
     print("Terminating processes...")
 
@@ -31,6 +38,9 @@ print("Starting Main Program...")
 signal.signal(signal.SIGINT, terminate_handler)
 
 telemetry = Telemetry()
+telemetry_process = Process(target=telemetry_worker)
+telemetry_process.start()
+time.sleep(1)                                             # Allow telemetry process to initialize
 
 motor_controller = MotorController()
 time.sleep(1)                                             # Allow motor controller to initialize
@@ -67,8 +77,4 @@ while True:
         print("Bounding box:", x, y, w, h)
         print("Center point:", c_x, c_y)
 
-    telemetry.update_all()
-    utils.update_screen(telemetry.get_all())
-
-    time.sleep(1)
 
