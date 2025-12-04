@@ -39,10 +39,21 @@ time.sleep(3)                                             # Allow vision process
 
 pallet_data_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)   # Create UDP socket for receiving pallet bounding box data
 pallet_data_socket.bind(("127.0.0.1", 3657))
+pallet_data_socket.setblocking(False)
 
 while True:
-    data, addr = pallet_data_socket.recvfrom(1024)
-    msg = data.decode().strip()
+
+    data = None
+
+    while True:
+        try:
+            data, addr = pallet_data_socket.recvfrom(1024)
+            break
+        except BlockingIOError:
+            pass
+
+    if data is not None:
+        msg = data.decode().strip()
 
     if msg.startswith("FOUND"):
         # Remove the "FOUND," prefix and split the data fields
