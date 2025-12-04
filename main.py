@@ -72,13 +72,11 @@ while True:
     if data is not None:
         msg = data.decode().strip()
 
-    if msg.startswith("FOUND"):
-        # Remove the "FOUND," prefix and split the data fields
-        parts = msg.replace("FOUND,", "").split(",")
+    if msg.startswith("PALLET_FOUND"):
+        # Remove the "PALLET_FOUND," prefix and split the data fields
+        parts = msg.replace("PALLET_FOUND,", "").split(",")
 
         # Parse the values
-        x, y, w, h, c_x, c_y = map(int, parts)
-        print("Bounding box:", x, y, w, h)
-        print("Center point:", c_x, c_y)
-
+        width, angle = map(float, parts)
+        print(f"Pallet Found - Width: {width}, Angle: {angle}")
 
