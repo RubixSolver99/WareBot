@@ -32,6 +32,7 @@ def terminate_handler(signum, frame):
     if telemetry_process is not None:
         telemetry_process.terminate()
         time.sleep(2)
+        telemetry_process.join()
 
     print("Done.")
 
@@ -39,7 +40,8 @@ def terminate_handler(signum, frame):
 
 print("Starting Main Program...")
 
-signal.signal(signal.SIGINT, terminate_handler)
+if __name__ == "__main__":
+    signal.signal(signal.SIGINT, terminate_handler)
 
 vision_process = Process(target=vision_worker)
 vision_process.start()
