@@ -7,7 +7,7 @@ HEIGHT = 160 # height of image to process (pixels)
 ASPECT = 11.5  # width / height of pallet in real life 
 
 # PALLET_COLOR_RANGE = np.array([[45, 70, 110], [255, 150, 170]]) # LAB Values For MXET Lab
-PALLET_COLOR_RANGE = np.array([[10, 110, 120], [30, 135, 145]]) # LAB Values for Carson's House
+PALLET_COLOR_RANGE = np.array([[20, 110, 130], [40, 130, 150]]) # LAB Values for Carson's House
 
 class PalletFilter:
 
