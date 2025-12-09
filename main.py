@@ -15,7 +15,7 @@ def telemetry_worker():
     telemetry = Telemetry()
     while True:
         telemetry.update_all()
-        utils.update_screen(telemetry.get_all())
+        #utils.update_screen(telemetry.get_all())                         # TODO: Uncomment to enable telemetry screen
         time.sleep(1)
 
 def terminate_handler(signum, frame):
