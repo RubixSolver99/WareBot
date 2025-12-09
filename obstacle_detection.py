@@ -22,7 +22,6 @@ class ObstacleDetection:
     def __init__(self):
         #UPD communication#
         self.dashBoardDatasock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.dashBoardDatasock.bind((self.IP, self.port))
         self.dashBoardDatasock.settimeout(.25)
 
         #NodeRED data in#
