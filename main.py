@@ -1,7 +1,7 @@
 import time, signal, socket, sys
 from multiprocessing import Process
 
-from motor_control import MotorController
+from motor_control import MotorControl
 from telemetry import Telemetry
 import utils, vision
 
@@ -50,7 +50,7 @@ telemetry_process = Process(target=telemetry_worker)
 telemetry_process.start()
 time.sleep(1)                                             # Allow telemetry process to initialize
 
-motor_controller = MotorController()
+motor_controller = MotorControl()
 time.sleep(1)                                             # Allow motor controller to initialize
 
 pallet_data_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)   # Create UDP socket for receiving pallet bounding box data

@@ -11,7 +11,7 @@ from time import sleep
 import time
 from threading import Thread
 
-class SCUTTLE:
+class ObstacleDetection:
 
     def __init__(self):
 
@@ -120,7 +120,7 @@ class SCUTTLE:
 
 if __name__ == "__main__":
 
-    robot = SCUTTLE()
+    robot = ObstacleDetection()
     try:
         while True:
             sleep(1)

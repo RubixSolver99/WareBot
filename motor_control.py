@@ -16,7 +16,7 @@ SERVO_UP_POS = 0.25
 SERVO_DOWN_POS = 0.85
 PALLET_TARGET_WIDTH = 200  # Target width of pallet in pixels when close enough
 
-class MotorController:
+class MotorControl:
 
     def __init__(self):
 
