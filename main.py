@@ -1,6 +1,7 @@
 import time, signal, socket, sys
 from multiprocessing import Process
 
+from obstacle_detection import ObstacleDetection
 from motor_control import MotorControl
 from telemetry import Telemetry
 import utils, vision
@@ -24,6 +25,10 @@ def terminate_handler(signum, frame):
 
     if vision_process is not None:
         vision_process.terminate()
+        time.sleep(2)
+
+    if obstacle_detection is not None:
+        obstacle_detection.stop()
         time.sleep(2)
 
     if motor_controller is not None:
@@ -50,6 +55,9 @@ telemetry = Telemetry()
 telemetry_process = Process(target=telemetry_worker)
 telemetry_process.start()
 time.sleep(1)                                             # Allow telemetry process to initialize
+
+obstacle_detection = ObstacleDetection()
+time.sleep(1)                                             # Allow obstacle detection to initialize
 
 motor_controller = MotorControl()
 time.sleep(1)                                             # Allow motor controller to initialize

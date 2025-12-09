@@ -64,6 +64,9 @@ class ObstacleDetection:
     def format_row(self, point, r=3):
         x, y = point
         return '{x: ' + str(x) + ', y: ' + str(y) + ', r:' + str(r) + '},'
+    
+    def stop(self):
+        self.lidar.kill(self.lidarControllerThread)
 
 if __name__ == "__main__":
 
