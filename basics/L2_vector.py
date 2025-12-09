@@ -9,7 +9,7 @@ import numpy as np
 import time
 
 # Import internal programs
-from L1_lidar import Lidar
+from basics.L1_lidar import Lidar
 
 np.set_printoptions(precision=3)                    # after math operations, don't print long values
 
