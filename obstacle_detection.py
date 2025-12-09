@@ -79,14 +79,14 @@ class ObstacleDetection:
         x, y = point
         return '{x: ' + str(x) + ', y: ' + str(y) + ', r:' + str(r) + '},'
 
-    def _dashBoardDataLoop(self):
-        while True:
-            try:
-                dashBoardData,recvAddr = self.dashBoardDatasock.recvfrom(1024)
-                self.dashBoardData = json.loads(dashBoardData)
+    # def _dashBoardDataLoop(self):
+    #     while True:
+    #         try:
+    #             dashBoardData,recvAddr = self.dashBoardDatasock.recvfrom(1024)
+    #             self.dashBoardData = json.loads(dashBoardData)
 
-            except socket.timeout:
-                self.dashBoardData = None
+    #         except socket.timeout:
+    #             self.dashBoardData = None
 
     # def _controlLoop(self):
     #     while True:
@@ -118,8 +118,8 @@ class ObstacleDetection:
     #     return C_matrix
 
 
-    def getdashBoardData(self):
-        return self.dashBoardData
+    # def getdashBoardData(self):
+    #     return self.dashBoardData
 
 
 if __name__ == "__main__":
