@@ -11,16 +11,19 @@ from time import sleep
 import time
 from threading import Thread
 
+CARTESIAN_SCALE_X = 1.5    # Scale factor to convert to meters
+CARTESIAN_SCALE_Y = 1.5    # Scale factor to convert to meters
+
 class ObstacleDetection:
 
     def __init__(self):
 
         #Kinematics#
-        self.wheelRadius = 0.04
-        self.wheelBase = 0.1
-        self.A_matrix = np.array([[1/self.wheelRadius, -self.wheelBase/self.wheelRadius], [1/self.wheelRadius, self.wheelBase/self.wheelRadius]])
-        self.max_xd = 0.4
-        self.max_td = (self.max_xd/self.wheelBase)
+        # self.wheelRadius = 0.04
+        # self.wheelBase = 0.1
+        # self.A_matrix = np.array([[1/self.wheelRadius, -self.wheelBase/self.wheelRadius], [1/self.wheelRadius, self.wheelBase/self.wheelRadius]])
+        # self.max_xd = 0.4
+        # self.max_td = (self.max_xd/self.wheelBase)
 
         #UPD communication#
         self.IP = "127.0.0.1"
@@ -46,8 +49,8 @@ class ObstacleDetection:
         self.dashBoardDataThread.start()
 
         #Driving Thread#
-        self.controlThread = Thread(target=self._controlLoop, daemon=True)
-        self.controlThread.start()
+        # self.controlThread = Thread(target=self._controlLoop, daemon=True)
+        # self.controlThread.start()
 
     def scan_loop(self):
         start_time = time.time()
@@ -66,6 +69,7 @@ class ObstacleDetection:
         for d,t in polar_data:
             if d < 3.5:
                 cartesian_point = vec.polar2cart(d,t)
+                cartesian_point = (cartesian_point[0] * CARTESIAN_SCALE_X, cartesian_point[1] * CARTESIAN_SCALE_Y)
                 rows += self.format_row(cartesian_point)
 
         return rows[:-1]
@@ -84,34 +88,34 @@ class ObstacleDetection:
             except socket.timeout:
                 self.dashBoardData = None
 
-    def _controlLoop(self):
-        while True:
-            if self.dashBoardData != None:
-                try:
-                    userInputTarget = self.dashBoardData['one_joystick']
-                    wheelSpeedTarget = self._getWheelSpeed(userInputTarget)
-                    sc.driveOpenLoop(wheelSpeedTarget)
-                except: 
-                    pass
+    # def _controlLoop(self):
+    #     while True:
+    #         if self.dashBoardData != None:
+    #             try:
+    #                 userInputTarget = self.dashBoardData['one_joystick']
+    #                 wheelSpeedTarget = self._getWheelSpeed(userInputTarget)
+    #                 sc.driveOpenLoop(wheelSpeedTarget)
+    #             except: 
+    #                 pass
 
-    def _getWheelSpeed(self,userInputTarget):
-        try:
-            robotTarget = self._mapSpeeds(np.array([userInputTarget['y'],-1*userInputTarget['x']]))
-            wheelSpeedTarget = self._calculateWheelSpeed(robotTarget)
-            return wheelSpeedTarget
-        except:
-            pass
+    # def _getWheelSpeed(self,userInputTarget):
+    #     try:
+    #         robotTarget = self._mapSpeeds(np.array([userInputTarget['y'],-1*userInputTarget['x']]))
+    #         wheelSpeedTarget = self._calculateWheelSpeed(robotTarget)
+    #         return wheelSpeedTarget
+    #     except:
+    #         pass
     
-    def _mapSpeeds(self,original_B_matrix):
-        B_matrix = np.zeros(2)
-        B_matrix[0] = self.max_xd * original_B_matrix[0]
-        B_matrix[1] = self.max_td * original_B_matrix[1]
-        return B_matrix
+    # def _mapSpeeds(self,original_B_matrix):
+    #     B_matrix = np.zeros(2)
+    #     B_matrix[0] = self.max_xd * original_B_matrix[0]
+    #     B_matrix[1] = self.max_td * original_B_matrix[1]
+    #     return B_matrix
 
-    def _calculateWheelSpeed(self,B_matrix):
-        C_matrix = np.matmul(self.A_matrix,B_matrix)
-        C_matrix = np.round(C_matrix,decimals=3)
-        return C_matrix
+    # def _calculateWheelSpeed(self,B_matrix):
+    #     C_matrix = np.matmul(self.A_matrix,B_matrix)
+    #     C_matrix = np.round(C_matrix,decimals=3)
+    #     return C_matrix
 
 
     def getdashBoardData(self):
