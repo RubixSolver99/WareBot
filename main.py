@@ -7,6 +7,7 @@ import utils, vision
 
 motor_controller = None
 vision_process = None
+telemetry_process = None
 
 def vision_worker():
     vision.start_pallet_filter()
