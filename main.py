@@ -7,6 +7,7 @@ from telemetry import Telemetry
 import utils, vision
 
 motor_controller = None
+obstacle_detection = None
 vision_process = None
 telemetry_process = None
 
