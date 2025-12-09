@@ -45,8 +45,8 @@ class ObstacleDetection:
         lidarPubThread.start()
 
         #NodeRED Data Thread#
-        self.dashBoardDataThread = Thread(target=self._dashBoardDataLoop, daemon=True)
-        self.dashBoardDataThread.start()
+        # self.dashBoardDataThread = Thread(target=self._dashBoardDataLoop, daemon=True)
+        # self.dashBoardDataThread.start()
 
         #Driving Thread#
         # self.controlThread = Thread(target=self._controlLoop, daemon=True)
