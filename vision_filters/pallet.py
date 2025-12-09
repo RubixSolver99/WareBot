@@ -1,22 +1,27 @@
-import cv2, os
+import cv2, os, socket      # pyright: ignore[reportMissingImports]
 import numpy as np
 
 WIDTH  = 240  # width of image to process (pixels)
 HEIGHT = 160 # height of image to process (pixels)
 
-PALLET_COLOR_RANGE = np.array([[45, 70, 110], [255, 150, 170]]) # LAB Values For MXET Lab
-# PALLET_COLOR_RANGE = np.array([[10, 80, 120], [255, 140, 160]]) # LAB Values for Carson's House
+ASPECT = 11.5  # width / height of pallet in real life 
+
+# PALLET_COLOR_RANGE = np.array([[45, 70, 110], [255, 150, 170]]) # LAB Values For MXET Lab
+PALLET_COLOR_RANGE = np.array([[20, 110, 130], [40, 130, 150]]) # LAB Values for Carson's House
 
 class PalletFilter:
 
-    # exposure_absolute=10
+    def __init__(self):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.target = ("127.0.0.1", 3657)
+
 
     def color_tracking(self, image, range=PALLET_COLOR_RANGE, min_size=6, max_size=6):
         global WIDTH, HEIGHT
 
         image = cv2.resize(image,(WIDTH, HEIGHT)) # resize the image
 
-        image_lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to hsv colorspace RENAME THIS TO IMAGE_HSV
+        image_lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to LAB colorspace RENAME THIS TO IMAGE_HSV
 
         blur = cv2.GaussianBlur(image_lab, (7, 7), 5)  # apply a blur to the image
 
@@ -35,16 +40,30 @@ class PalletFilter:
             c = max(cnts, key=cv2.contourArea)          # return the largest target area
             x,y,w,h = cv2.boundingRect(c)               # Get bounding rectangle (x,y,w,h) of the largest contour
 
+            h = int(w / ASPECT)
+
+            cx = x + w // 2
+            cy = y + h // 2
+            x = int(cx - w / 2)
+            y = int(cy - h / 2)
+
             center = (int(x+0.5*w), int(y+0.5*h))       # defines center of rectangle around the largest target area
 
             if 0.5*w > min_size:
+                angle = round(((center[0]/WIDTH)-0.5)*75, 3)  # angle of vector towards target center from camera, where 0 deg is centered
+                message = f"PALLET_FOUND,{w},{angle}"
+
                 cv2.rectangle(image, (int(x), int(y)), (int(x+w), int(y+h)), (0, 255, 255), 2)  # draw bounding box
                 cv2.circle(image, center, 3, (0, 0, 0), -1) # draw a dot on the target center
                 cv2.circle(image, center, 1, (255, 255, 255), -1) # draw a dot on the target center
 
                 cv2.putText(image,"("+str(center[0])+","+str(center[1])+")", (center[0]+10,center[1]+15), cv2.FONT_HERSHEY_SIMPLEX, 0.2,(0,0,0),2,cv2.LINE_AA)
                 cv2.putText(image,"("+str(center[0])+","+str(center[1])+")", (center[0]+10,center[1]+15), cv2.FONT_HERSHEY_SIMPLEX, 0.2,(255,255,255),1,cv2.LINE_AA)
-        
+            else:
+                message = "PALLET_NOT_FOUND"
+            
+            self.sock.sendto(message.encode(), self.target)
+
         image_height, image_width, channels = image.shape   # get image dimensions
 
         spacer = np.zeros((image_height,3,3), np.uint8)

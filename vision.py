@@ -1,7 +1,7 @@
-import cv2, os, time
+import os, time
 import numpy as np
 
-PALLET_EXPOSURE_VALUE = 25  # set manual exposure value (lower number = less exposure)
+PALLET_EXPOSURE_VALUE = 45  # set manual exposure value (lower number = less exposure)
 
 def start_pallet_filter():
     set_manual_exposure(PALLET_EXPOSURE_VALUE)
@@ -11,7 +11,7 @@ def start_pallet_filter():
               --filter /usr/local/lib/mjpg-streamer/cvfilter_py.so \
               --fargs ./vision_filters/pallet.py\" \
               -o \"/usr/local/lib/mjpg-streamer/output_http.so \
-              -p 8090 \
+              -p 3656 \
               -w /usr/local/share/mjpg-streamer/www\"")
 
 def set_manual_exposure(value):

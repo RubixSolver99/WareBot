@@ -14,8 +14,9 @@ from gpiozero.pins.pigpio import PiGPIOFactory     # pyright: ignore[reportMissi
 
 SERVO_UP_POS = 0.25
 SERVO_DOWN_POS = 0.85
+PALLET_TARGET_WIDTH = 200  # Target width of pallet in pixels when close enough
 
-class MotorControl:
+class MotorController:
 
     def __init__(self):
 
@@ -120,6 +121,46 @@ class MotorControl:
         self.forklift_servo_A.value = SERVO_UP_POS
         self.forklift_servo_B.value = -SERVO_UP_POS
 
+    def approach_pallet(self, width, angle):
+        # Simple proportional controller to drive towards pallet
+        Kp_lin = 0.002  # Proportional gain for linear velocity
+        Kp_ang = 0.05   # Proportional gain for angular velocity
+
+        lin_vel = Kp_lin * (PALLET_TARGET_WIDTH - width)  # Target width is 200 pixels
+        ang_vel = Kp_ang * angle
+
+        # Limit velocities
+        lin_vel = max(min(lin_vel, self.max_xd), -self.max_xd)
+        ang_vel = max(min(ang_vel, self.max_td), -self.max_td)
+
+        B_matrix = np.array([lin_vel, ang_vel])
+        wheelSpeedTarget = self._calculateWheelSpeed(B_matrix)
+        sc.driveOpenLoop(wheelSpeedTarget)
+
+        # wheel_measured = kin.getPdCurrent()                     # Wheel speed measurements
+
+        # # If robot is facing target
+        # if abs(angle) < angle_margin:                                 
+        #     e_width = target_width - w                          # Find error in target width and measured width
+
+        #     # If error width is within acceptable margin
+        #     if abs(e_width) < width_margin:
+        #         sc.driveOpenLoop(np.array([0.,0.]))             # Stop when centered and aligned
+        #         print("Aligned! ",w)
+        #         continue
+
+        #     fwd_effort = e_width/target_width                   
+            
+        #     wheel_speed = ik.getPdTargets(np.array([0.8*fwd_effort, -0.5*angle]))   # Find wheel speeds for approach and heading correction
+        #     sc.driveClosedLoop(wheel_speed, wheel_measured, 0)  # Drive closed loop
+        #     print("Angle: ", angle, " | Target L/R: ", *wheel_speed, " | Measured L\R: ", *wheel_measured)
+        #     continue
+
+        # wheel_speed = ik.getPdTargets(np.array([0, -1.1*angle]))    # Find wheel speeds for only turning
+
+        # sc.driveClosedLoop(wheel_speed, wheel_measured, 0)          # Drive robot
+        # print("Angle: ", angle, " | Target L/R: ", *wheel_speed, " | Measured L\R: ", *wheel_measured)
+
     def exit(self):
         self.forklift_down()
         self.forklift_servo_A.detach()
@@ -127,13 +168,3 @@ class MotorControl:
 
         os.system('sudo systemctl stop pigpiod')        # Stop pigpio daemon to prevent servos from constantly running
 
-
-if __name__ == "__main__":
-
-    robot = MotorControl()
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Stopping motor control and forklift...")
-        robot.exit()
