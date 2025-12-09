@@ -13,6 +13,7 @@ from threading import Thread
 
 IP = "127.0.0.1"
 DASHBOARD_PORT = 3555
+MAIN_COM_PORT = 3666
 
 CARTESIAN_SCALE_X = 1.5    # Scale factor to convert to meters
 CARTESIAN_SCALE_Y = 1.5    # Scale factor to convert to meters
@@ -42,6 +43,7 @@ class ObstacleDetection:
             data = self.cartesian_scan()
             data_msg = data.encode('utf-8')
             self.dashBoardDatasock.sendto(data_msg, (IP, DASHBOARD_PORT))
+            self.dashBoardDatasock.sendto(data_msg, (IP, MAIN_COM_PORT))
             sleep(0.5)
 
     def cartesian_scan(self):
