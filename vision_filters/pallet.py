@@ -21,7 +21,9 @@ class PalletFilter:
 
         image = cv2.resize(image,(WIDTH, HEIGHT)) # resize the image
 
-        image_lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to LAB colorspace RENAME THIS TO IMAGE_HSV
+        image = cv2.bilateralFilter(image, 9, 175, 175)
+
+        image_lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert image to LAB colorspace
 
         blur = cv2.GaussianBlur(image_lab, (7, 7), 5)  # apply a blur to the image
 
