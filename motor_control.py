@@ -129,7 +129,7 @@ class MotorControl:
     def approach_pallet(self, width, angle):
 
         while abs(angle) >= ANGLE_MARGIN:
-            wheel_measured = ik.getPdCurrent()                     # Wheel speed measurements
+            wheel_measured = kin.getPdCurrent()                     # Wheel speed measurements
 
             wheel_speed = ik.getPdTargets(np.array([0, -1.1*angle]))    # Find wheel speeds for only turning
 
