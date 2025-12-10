@@ -91,12 +91,12 @@ class MotorControl:
                     elif userInput['B']:
                         print("Forklift Down")
                         self.forklift_down()
-                    elif userInput['X']:
-                        print("Stopping Robot")
-                        self.stop()
-                    elif userInput['Y']:
-                        print("Approaching Pallet")
-                        self.approach_pallet(PALLET_TARGET_WIDTH, 0)
+                    # elif userInput['X']:
+                    #     print("Stopping Robot")
+                    #     self.stop()
+                    # elif userInput['Y']:
+                    #     print("Approaching Pallet")
+                    #     self.approach_pallet(PALLET_TARGET_WIDTH, 0)
                 except:
                     pass
 
