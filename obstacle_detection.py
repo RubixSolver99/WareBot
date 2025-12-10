@@ -13,7 +13,7 @@ from threading import Thread
 
 IP = "127.0.0.1"
 DASHBOARD_PORT = 3555
-MAIN_COM_PORT = 3666
+MAIN_COM_PORT = 3655
 
 CARTESIAN_SCALE_X = 1.5    # Scale factor to convert to meters
 CARTESIAN_SCALE_Y = 1.5    # Scale factor to convert to meters
