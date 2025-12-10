@@ -5,6 +5,7 @@ WIDTH  = 240  # width of image to process (pixels)
 HEIGHT = 160 # height of image to process (pixels)
 
 ASPECT = 11.5  # width / height of pallet in real life 
+MIN_PALLET_SIZE = 25  # minimum pallet width in pixels to consider valid
 
 # PALLET_COLOR_RANGE = np.array([[45, 70, 110], [255, 150, 170]]) # LAB Values For MXET Lab
 PALLET_COLOR_RANGE = np.array([[20, 110, 130], [40, 130, 150]]) # LAB Values for Carson's House
@@ -16,7 +17,7 @@ class PalletFilter:
         self.target = ("127.0.0.1", 3657)
 
 
-    def color_tracking(self, image, range=PALLET_COLOR_RANGE, min_size=6, max_size=6):
+    def color_tracking(self, image, range=PALLET_COLOR_RANGE, min_size=MIN_PALLET_SIZE, max_size=6):
         global WIDTH, HEIGHT
 
         image = cv2.resize(image,(WIDTH, HEIGHT)) # resize the image
