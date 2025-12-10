@@ -137,6 +137,8 @@ class MotorControl:
             print("Angle: ", angle, " | Target L/R: ", *wheel_speed, " | Measured L\R: ", *wheel_measured)
 
         while abs(width) < PALLET_TARGET_WIDTH:
+            wheel_measured = kin.getPdCurrent()                     # Wheel speed measurements
+            
             e_width = PALLET_TARGET_WIDTH - width                          # Find error in target width and measured width
 
             # If error width is within acceptable margin
