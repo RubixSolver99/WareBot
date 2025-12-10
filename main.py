@@ -88,6 +88,6 @@ while True:
         # Parse the values
         width, angle = map(float, parts)
         print(f"Pallet Found - Width: {width}, Angle: {angle}")
-        motor_controller.update_pallet_info(width, angle)
-    else:
-        motor_controller.stop()
+        # motor_controller.update_pallet_info(width, angle)
+    # else:
+    #     motor_controller.stop()

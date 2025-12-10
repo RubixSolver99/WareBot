@@ -135,39 +135,39 @@ class MotorControl:
         self.forklift_servo_A.value = SERVO_UP_POS
         self.forklift_servo_B.value = -SERVO_UP_POS
 
-    def update_pallet_info(self, width, angle):
-        self.pallet_target_width = width
-        self.pallet_target_angle = angle
+    # def update_pallet_info(self, width, angle):
+    #     self.pallet_target_width = width
+    #     self.pallet_target_angle = angle
 
-    def approach_pallet(self):
+    # def approach_pallet(self):
 
-        while abs(self.pallet_target_angle) >= ANGLE_MARGIN:
-            wheel_measured = kin.getPdCurrent()                     # Wheel speed measurements
+    #     while abs(self.pallet_target_angle) >= ANGLE_MARGIN:
+    #         wheel_measured = kin.getPdCurrent()                     # Wheel speed measurements
 
-            wheel_speed = ik.getPdTargets(np.array([0, -1.1*self.pallet_target_angle]))    # Find wheel speeds for only turning
+    #         wheel_speed = ik.getPdTargets(np.array([0, -1.1*self.pallet_target_angle]))    # Find wheel speeds for only turning
 
-            sc.driveClosedLoop(wheel_speed, wheel_measured, 0)          # Drive robot
-            print("Angle: ", self.pallet_target_angle, " | Target L/R: ", *wheel_speed, " | Measured L\R: ", *wheel_measured)
+    #         sc.driveClosedLoop(wheel_speed, wheel_measured, 0)          # Drive robot
+    #         print("Angle: ", self.pallet_target_angle, " | Target L/R: ", *wheel_speed, " | Measured L\R: ", *wheel_measured)
 
-        while abs(self.pallet_target_width) < PALLET_TARGET_WIDTH:
-            wheel_measured = kin.getPdCurrent()                     # Wheel speed measurements
+    #     while abs(self.pallet_target_width) < PALLET_TARGET_WIDTH:
+    #         wheel_measured = kin.getPdCurrent()                     # Wheel speed measurements
 
-            e_width = PALLET_TARGET_WIDTH - self.pallet_target_width                          # Find error in target width and measured width
+    #         e_width = PALLET_TARGET_WIDTH - self.pallet_target_width                          # Find error in target width and measured width
 
-            # If error width is within acceptable margin
-            if abs(e_width) < WIDTH_MARGIN:
-                sc.driveOpenLoop(np.array([0.,0.]))             # Stop when centered and aligned
-                print("Aligned! ",self.pallet_target_width)
-                break
+    #         # If error width is within acceptable margin
+    #         if abs(e_width) < WIDTH_MARGIN:
+    #             sc.driveOpenLoop(np.array([0.,0.]))             # Stop when centered and aligned
+    #             print("Aligned! ",self.pallet_target_width)
+    #             break
 
-            fwd_effort = e_width/PALLET_TARGET_WIDTH
+    #         fwd_effort = e_width/PALLET_TARGET_WIDTH
 
-            wheel_speed = ik.getPdTargets(np.array([0.8*fwd_effort, -0.5*self.pallet_target_angle]))   # Find wheel speeds for approach and heading correction
-            sc.driveClosedLoop(wheel_speed, wheel_measured, 0)  # Drive closed loop
-            print("Angle: ", self.pallet_target_angle, " | Target L/R: ", *wheel_speed, " | Measured L\R: ", *wheel_measured)
+    #         wheel_speed = ik.getPdTargets(np.array([0.8*fwd_effort, -0.5*self.pallet_target_angle]))   # Find wheel speeds for approach and heading correction
+    #         sc.driveClosedLoop(wheel_speed, wheel_measured, 0)  # Drive closed loop
+    #         print("Angle: ", self.pallet_target_angle, " | Target L/R: ", *wheel_speed, " | Measured L\R: ", *wheel_measured)
 
-    def stop(self):
-        sc.driveOpenLoop(np.array([0.,0.]))         # stop the robot immediately
+    # def stop(self):
+    #     sc.driveOpenLoop(np.array([0.,0.]))         # stop the robot immediately
 
     def exit(self):
         self.forklift_down()
