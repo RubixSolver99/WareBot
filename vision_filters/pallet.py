@@ -51,7 +51,7 @@ class PalletFilter:
             cx = x + w // 2
             cy = y + h // 2
             x = int(cx - w / 2)
-            y = int(cy - h / 2)
+            y = int(cy - h / 2) + 10  # adjust y to better center box on pallet
 
             center = (int(x+0.5*w), int(y+0.5*h))       # defines center of rectangle around the largest target area
 
