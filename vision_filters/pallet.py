@@ -32,12 +32,12 @@ class PalletFilter:
         # apply a blur function
         kernel = np.ones((7,7),np.uint8)
 
-        dilated = cv2.dilate(thresh, kernel, iterations=1)
+        dilated = cv2.dilate(thresh, kernel, iterations=2)  # Dilate to fill in gaps
 
         mask = cv2.morphologyEx(dilated, cv2.MORPH_OPEN, kernel) # Apply blur
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel) # Blur again
 
-        mask = cv2.GaussianBlur(mask, (21, 21), 0)  # final blur to smooth edges
+        mask = cv2.GaussianBlur(mask, (25, 25), 0)  # final blur to smooth edges
 
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2] #generates number of contiguous "1" pixels
         center = None # create a variable for x, y location of target
